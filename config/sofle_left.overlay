@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2024 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ *
+ * ZMK Studio support: route keymap positions through the physical layout
+ * instead of the legacy chosen matrix-transform. The transform itself is
+ * unchanged — the physical layout already references the shield's
+ * default_transform.
+ */
+
+/ {
+    chosen {
+        /delete-property/ zmk,matrix-transform;
+        zmk,physical-layout = &josefadamcik_sofle_layout;
+    };
+};
+
+/*
+ * Battery voltage divider (nRFMicro 1.4).
+ *
+ * These values already match the board's actual divider, measured from the
+ * official nRFMicro schematic: VBAT — 820K — BATTERY_PIN — 2M — GND.
+ * They override the nrfmicro_13 board defaults, which are the same, so this
+ * is a no-op by default — kept here as a documented tuning point.
+ *
+ * Only touch this if macOS shows a clearly wrong battery percentage:
+ *   full-ohms   = top + bottom resistance (battery to ground)
+ *   output-ohms = bottom resistance (BATTERY_PIN to ground)
+ * e.g. if your clone used a 1M/1M divider instead: output-ohms = <1000000>,
+ * full-ohms = <2000000>.
+ */
+&vbatt {
+    output-ohms = <2000000>;
+    full-ohms = <2820000>;
+};
